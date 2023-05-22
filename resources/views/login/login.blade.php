@@ -3,13 +3,13 @@
 
 <head>
     <title>Login de la Asociación de Agricultores</title>
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('css/login.css') }}">
 
 </head>
 
 <body>
     <div class="container">
-        <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo de la Asociación de Agricultores">
+        <img class="logo" src="{{ secure_asset('images/logo.png') }}" alt="Logo de la Asociación de Agricultores">
         <h1>Login de la Asociación de Agricultores</h1>
         <form id="login-form">
             @csrf
@@ -25,7 +25,7 @@
 </body>
 
 </html>
-<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ secure_asset('js/jquery.min.js') }}"></script>
 <script>
     $("#btn_iniciar_sesion").click(function(e) {
         $('#error').hide();
