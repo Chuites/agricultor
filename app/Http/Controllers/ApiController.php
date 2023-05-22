@@ -114,7 +114,6 @@ class ApiController extends BaseController
             'password' => $request->password
         ];
         $client = new \GuzzleHttp\Client();
-        $client->setDefaultOption('verify', false);
         $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/login', [
             'headers' => [
                 'Content-Type' => 'application/json',
