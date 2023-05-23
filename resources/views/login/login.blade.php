@@ -34,19 +34,22 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: "POST",
-            url: "{{ secure_route('login') }}",
+            url: modifyURLScheme("{{ route('login') }}", "https"),
             data: $('#login-form').serialize(),
             dataType: "json",
             success: function(data) {
                 // Redireccionar a la página de inicio después de un inicio de sesión exitoso
-                window.location.href = "{{ route('welcome') }}";
+                window.location.href = modifyURLScheme("{{ route('welcome') }}", "https");
 
             },
             error: function() {
-
                 $('#error').show();
             }
         });
     });
+
+    function modifyURLScheme(url, scheme) {
+        return url.replace(/^http:/i, scheme + ":");
+    }
 </script>
 The POST method is not supported for route /. Supported methods: GET, HEAD.
