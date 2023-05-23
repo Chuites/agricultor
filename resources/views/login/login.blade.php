@@ -34,7 +34,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: "POST",
-            url: "{{ route('login') }}",
+            url: "{{ secure_route('login') }}",
             data: $('#login-form').serialize(),
             dataType: "json",
             success: function(data) {
