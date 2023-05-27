@@ -18,6 +18,7 @@ Route::post('testPiloto', 'App\Http\Controllers\ApiController@testPiloto')->name
 Route::post('enviarCargamento', 'App\Http\Controllers\ApiController@enviarCargamento')->name("enviarCargamento");
 Route::post('listadoCargamentos', 'App\Http\Controllers\ApiController@listadoCargamentos')->name("listadoCargamentos");
 Route::post('enviarParcialidad', 'App\Http\Controllers\ApiController@enviarParcialidad')->name("enviarParcialidad");
+Route::post('estadoCargamento', 'App\Http\Controllers\ApiController@estadoCargamento')->name("estadoCargamento");
 
 
 

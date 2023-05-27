@@ -70,6 +70,64 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     $(document).ready(function() {
         $('#listadoCargamentos').hide();
+        $('[data-tooltip]').tooltip();
+    });
+
+
+    $("#btnConsultarEstado").click(function(e){
+        if($("#id_cargamento_estado").val() == ''){
+            alert('Debe ingresar un numero de cargamento para consultar el estado')
+        }else{
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route("estadoCargamento") }}',
+                type: 'POST',
+                data: {
+                    id_cargamento: $("#id_cargamento_estado").val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    estado = data.estado;
+                    alert(data.justificacion);
+                    $('#creada').removeClass('estado_actual');
+                    $('#abierta').removeClass('estado_actual');
+                    $('#piniciado').removeClass('estado_actual');
+                    $('#pfinalizado').removeClass('estado_actual');
+                    $('#cerrada').removeClass('estado_actual');
+                    $('#confirmada').removeClass('estado_actual');
+
+                    switch (estado) {
+                        case 1:
+                        $('#creada').addClass('estado_actual');
+                            break;
+                        case 2:
+                        $('#abierta').addClass('estado_actual');
+                            break;
+                        case 3:
+                        $('#piniciado').addClass('estado_actual');
+                            break;
+                        case 4:
+                        $('#pfinalizado').addClass('estado_actual');
+                            break;
+                        case 5:
+                        $('#pfinalizado').addClass('estado_actual');
+                        $('#cerrada').addClass('estado_actual');
+                            break;
+                        case 6:
+                        $('#confirmada').addClass('estado_actual');
+                            break;
+
+                        default:
+                            break;
+                    }
+                },
+                error: function(response){
+                    alert('error');
+                }
+            });
+        }
     });
 
     $("#btnEnviarParcialidad").click(function(e){
@@ -210,13 +268,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 let mensaje;
                 console.log(data);
                 if (data.hasOwnProperty('transporte')) {
-                    mensaje = data.transporte.transporte + "\n";
+                    mensaje = data.transporte + "\n";
                 }
                 if (data.hasOwnProperty('agricultor')) {
-                    mensaje = mensaje + data.agricultor.agricultor + "\n";
+                    mensaje = mensaje + data.agricultor + "\n";
                 }
                 if (data.hasOwnProperty('piloto')) {
-                    mensaje = mensaje + data.piloto.piloto + "\n";
+                    mensaje = mensaje + data.piloto + "\n";
                 }
                 console.log(data);
                 alert(mensaje);
