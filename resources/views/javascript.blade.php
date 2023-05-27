@@ -148,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 } else {
                     alert('Todos los campos son requeridos');
                 }
+                window.location = "{{route('testQR')}}" + $('#id_cargamento').val();
 
             },
             error: function(response){

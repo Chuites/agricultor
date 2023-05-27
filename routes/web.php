@@ -19,6 +19,7 @@ Route::post('enviarCargamento', 'App\Http\Controllers\ApiController@enviarCargam
 Route::post('listadoCargamentos', 'App\Http\Controllers\ApiController@listadoCargamentos')->name("listadoCargamentos");
 Route::post('enviarParcialidad', 'App\Http\Controllers\ApiController@enviarParcialidad')->name("enviarParcialidad");
 Route::post('estadoCargamento', 'App\Http\Controllers\ApiController@estadoCargamento')->name("estadoCargamento");
+Route::get('testQR\{id_cargamento?}', 'App\Http\Controllers\ApiController@testQR')->name("testQR");
 
 
 

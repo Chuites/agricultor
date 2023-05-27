@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -16,6 +17,8 @@ use App\Models\baseModel;
 use Session;
 use View;
 use DB;
+use PDF;
+
 use GuzzleHttp;
 
 class ApiController extends BaseController
@@ -34,6 +37,46 @@ class ApiController extends BaseController
         return;
     }
 
+    public function testQR(Request $request, $id_cargamento)
+    {
+        $data = [
+            'id_cargamento' => $request->id_cargamento,
+        ];
+        $client = new \GuzzleHttp\Client();
+        //$response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/recibirParcialidad', [
+        $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/infoParcialidad', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '. Session::get('token')
+            ],
+            'json' => $data
+        ]);
+        if($response->getStatusCode() == 200)
+        {
+            $content = $response->getBody()->getContents();
+            $data = json_decode($content, true);
+
+            $dpi_piloto = $data['dpi'];
+            $nombre_piloto = $data['nombre_completo'];
+            $estado_piloto = $data['justificacion'];
+            $placa_transporte = $data['placa'];
+            $marca_transporte = $data['marca'];
+            $color_transporte = $data['color'];
+            $estado_transporte = $data['justificacion2'];
+
+
+            $pdf = PDF::loadView('pdf.boleta_parcialidad', compact('dpi_piloto','nombre_piloto','estado_piloto','placa_transporte','marca_transporte','color_transporte','estado_transporte'));
+            return $pdf->download('Boleta de parcialidad.pdf');
+        }
+        else {
+            $data = [
+                'mensaje' => 'Error al consultar los cargamentos'
+            ];
+            return response()->json($data, 401);
+        }
+    }
+
 
     public function enviarParcialidad(Request $request){
         $data = [
@@ -42,7 +85,7 @@ class ApiController extends BaseController
         ];
         $client = new \GuzzleHttp\Client();
         //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/recibirParcialidad', [
-        $response = $client->post('http://127.0.0.1:8081/api/recibirParcialidad', [
+        $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/recibirParcialidad', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
@@ -71,7 +114,7 @@ class ApiController extends BaseController
         ];
         $client = new \GuzzleHttp\Client();
         //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/listadoCargamentos', [
-        $response = $client->post('http://127.0.0.1:8081/api/listadoCargamentos', [
+        $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/listadoCargamentos', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
@@ -97,7 +140,7 @@ class ApiController extends BaseController
     public function testapi(Request $request){
         $client = new \GuzzleHttp\Client();
         //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/testConectividad', [
-        $response = $client->post('http://127.0.0.1:8081/api/testConectividad', [
+        $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/testConectividad', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
@@ -118,7 +161,7 @@ class ApiController extends BaseController
         $client = new \GuzzleHttp\Client();
         logger('entra antes de la peticion!!!!!!!');
         //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/login', [
-        $response = $client->post('http://127.0.0.1:8081/api/login', [
+        $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/login', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
@@ -165,7 +208,7 @@ class ApiController extends BaseController
             ];
             $client = new \GuzzleHttp\Client();
             //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/confirmarTransporte', [
-            $response = $client->post('http://127.0.0.1:8081/api/confirmarTransporte', [
+            $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/confirmarTransporte', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
@@ -199,7 +242,7 @@ class ApiController extends BaseController
             ];
             $client = new \GuzzleHttp\Client();
             //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/confirmarPiloto', [
-            $response = $client->post('http://127.0.0.1:8081/api/confirmarPiloto', [
+            $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/confirmarPiloto', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
@@ -251,7 +294,7 @@ class ApiController extends BaseController
             ];
             $client = new \GuzzleHttp\Client();
             //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/crearCuenta', [
-            $response = $client->post('http://127.0.0.1:8081/api/crearCuenta', [
+            $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/crearCuenta', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
@@ -272,7 +315,7 @@ class ApiController extends BaseController
         $client = new \GuzzleHttp\Client();
         try {
             //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/estadoCargamento', [
-            $response = $client->post('http://127.0.0.1:8081/api/estadoCargamento', [
+            $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/estadoCargamento', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
@@ -323,7 +366,7 @@ class ApiController extends BaseController
             $client = new \GuzzleHttp\Client();
             try {
                 //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/envioCargamento', [
-                $response = $client->post('http://127.0.0.1:8081/api/envioCargamento', [
+                $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/envioCargamento', [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
