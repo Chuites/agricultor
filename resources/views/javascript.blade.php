@@ -52,8 +52,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById("datos_parcialidad").style.display = "none";
     document.getElementById("traking_div").style.display = "none";
 
-
-
     $("#btntestconexion").click(function(e){
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
@@ -148,7 +146,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 } else {
                     alert('Todos los campos son requeridos');
                 }
-                window.location = "{{route('testQR')}}" + $('#id_cargamento').val();
+
+                if(data.mensaje.includes('registrada correctamente')){
+                    var url = "{{ route('generarQR') }}" + $('#id_cargamento').val();
+                    window.open(url, '_blank');
+                }
+
 
             },
             error: function(response){

@@ -18,6 +18,7 @@ use Session;
 use View;
 use DB;
 use PDF;
+use Dompdf\Options;
 
 use GuzzleHttp;
 
@@ -26,24 +27,29 @@ class ApiController extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
     public function logout(Request $request){
-        //$response = Http::post('https://beneficiodecafeapirest.herokuapp.com/api/testConectividad');
         Session::forget('token');
         return response()->json(200);
     }
 
     public function borrarSesion(Request $request){
-        //$response = Http::post('https://beneficiodecafeapirest.herokuapp.com/api/testConectividad');
         Session::forget('token');
         return;
     }
 
-    public function testQR(Request $request, $id_cargamento)
+    public function generarQR(Request $request, $id_cargamento){
+        QrCode::generate(route('infoParcialidad', encrypt($id_cargamento)), '../public/qrcodes/qrcode.svg');
+
+        $pdf = PDF::loadView('pdf.boletaQR');
+        return $pdf->stream('Informació de Envio.pdf');
+    }
+
+    public function infoParcialidad(Request $request, $id_cargamento)
     {
+        $request->id_cargamento = decrypt($id_cargamento);
         $data = [
             'id_cargamento' => $request->id_cargamento,
         ];
         $client = new \GuzzleHttp\Client();
-        //$response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/recibirParcialidad', [
         $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/infoParcialidad', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -65,9 +71,7 @@ class ApiController extends BaseController
             $color_transporte = $data['color'];
             $estado_transporte = $data['justificacion2'];
 
-
-            $pdf = PDF::loadView('pdf.boleta_parcialidad', compact('dpi_piloto','nombre_piloto','estado_piloto','placa_transporte','marca_transporte','color_transporte','estado_transporte'));
-            return $pdf->download('Boleta de parcialidad.pdf');
+            return view('informacionParcialidad', compact('dpi_piloto', 'nombre_piloto', 'estado_piloto', 'placa_transporte', 'marca_transporte', 'color_transporte', 'estado_transporte'));
         }
         else {
             $data = [
@@ -84,7 +88,6 @@ class ApiController extends BaseController
             'peso_parcialidad' => $request->peso_parcialidad
         ];
         $client = new \GuzzleHttp\Client();
-        //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/recibirParcialidad', [
         $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/recibirParcialidad', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -159,8 +162,6 @@ class ApiController extends BaseController
             'password' => $request->password
         ];
         $client = new \GuzzleHttp\Client();
-        logger('entra antes de la peticion!!!!!!!');
-        //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/login', [
         $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/login', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -241,7 +242,6 @@ class ApiController extends BaseController
                 'dpi' => $request->dpi_piloto
             ];
             $client = new \GuzzleHttp\Client();
-            //$response = $client->post('http://beneficiodecafeapirest.herokuapp.com/api/confirmarPiloto', [
             $response = $client->post('https://beneficiodecafeapirest.herokuapp.com/api/confirmarPiloto', [
                 'headers' => [
                     'Content-Type' => 'application/json',

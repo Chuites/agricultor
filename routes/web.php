@@ -20,6 +20,8 @@ Route::post('listadoCargamentos', 'App\Http\Controllers\ApiController@listadoCar
 Route::post('enviarParcialidad', 'App\Http\Controllers\ApiController@enviarParcialidad')->name("enviarParcialidad");
 Route::post('estadoCargamento', 'App\Http\Controllers\ApiController@estadoCargamento')->name("estadoCargamento");
 Route::get('testQR\{id_cargamento?}', 'App\Http\Controllers\ApiController@testQR')->name("testQR");
+Route::get('generarQR\{id_cargamento?}', 'App\Http\Controllers\ApiController@generarQR')->name("generarQR");
+Route::get('infoParcialidad\{id_cargamento?}', 'App\Http\Controllers\ApiController@infoParcialidad')->name("infoParcialidad");
 
 
 

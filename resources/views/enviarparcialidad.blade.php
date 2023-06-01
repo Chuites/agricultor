@@ -17,6 +17,7 @@
         <br>
         <a href="#" class="btn btn-primary" id="btnMostrarCargamentos" name="btnMostrarCargamentos">Mostrar Cargamentos</a>
     </form>
+    <form action="{{route('generarQR')}}" id="form_generarQR"></form>
     <br>
     <div id="listadoCargamentos">
         <h3>Cargamentos Creados</h3>
