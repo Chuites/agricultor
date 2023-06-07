@@ -272,19 +272,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 let mensaje;
                 console.log(data);
                 if (data.hasOwnProperty('transporte')) {
-                    mensaje = data.transporte + "\n";
+                    mensaje = data.transporte;
                 }
                 if (data.hasOwnProperty('agricultor')) {
-                    mensaje = mensaje + data.agricultor + "\n";
+                    mensaje = data.agricultor;
                 }
                 if (data.hasOwnProperty('piloto')) {
-                    mensaje = mensaje + data.piloto + "\n";
+                    mensaje = data.piloto;
                 }
                 console.log(data);
                 alert(mensaje);
             },
             error: function(response){
-                alert("Error al consultar los datos");
+                alert("Todos los campos son requeridos");
             }
         });
     });
